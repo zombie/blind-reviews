@@ -5,7 +5,7 @@ Blind Reviews BMO Experiment
 
 Background
 ----------
-See (Web Extension for Debiasing Code Reviews in Splinter Experiment)[1366429].
+See [Web Extension for Debiasing Code Reviews in Splinter Experiment][1366429].
 
 
 License

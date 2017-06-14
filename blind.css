@@ -1,0 +1,17 @@
+
+body.br-blinded span.br-original,
+body:not(.br-blinded) span.br-redacted,
+body .change-gravatar .br-icon {
+  display: none;
+}
+
+body.br-blinded .change-gravatar .br-redacted {
+  visibility: hidden;
+}
+
+img.br-icon {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  vertical-align: sub;
+}

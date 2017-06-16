@@ -11,27 +11,25 @@ function toggle() {
 }
 
 /**
- * Detects any active review requests on the bug page.
- * @returns {Set<vcard_ID>} set of user ID css classes
+ * Detect an active review requests on the bug page.
+ * @returns {string} the submitter's vcard ID css class
  */
-function requesters() {
+function submitter() {
   const user = BUGZILLA.user.id;
-  const mentions = document.querySelectorAll(`div.attach-flag .vcard_${user}`);
-  const result = new Set();
+  const flags = document.querySelectorAll(`div.attach-flag .vcard_${user}`);
 
-  for (const m of mentions) {
-    const flag = m.previousElementSibling.textContent.trim();
-    const user = m.parentElement.firstElementChild.className.match(/vcard_\d+/);
-    if (user && flag === "review?") {
-      result.add(user[0]);
+  for (const f of flags) {
+    const type = f.previousElementSibling.textContent.trim();
+    const vcard = f.parentNode.firstElementChild.className.match(/vcard_\d+/);
+    if (vcard && type === "review?") {
+      return vcard[0];
     }
   }
-  return result;
 }
 
 /**
  * Detects any active review requests on the bug page.
- * @arg {string} user vcard ID css class
+ * @arg {string} user vcard_ID css class
  */
 function augment(user) {
   const vcards = document.querySelectorAll(`.${user}`);
@@ -51,13 +49,11 @@ function augment(user) {
  * Activate the extension if there are any review requests.
  */
 function activate() {
-  const users = requesters();
-  if (!users.size) {
+  const user = submitter();
+  if (!user) {
     return;
   }
-  for (const user of users) {
-    augment(user);
-  }
+  augment(user);
 
   const options = {
     trigger: "left",

@@ -1,17 +1,21 @@
 
-body.br-blinded span.br-original,
-body:not(.br-blinded) span.br-redacted,
+body.br-blinded div.br-vcard span.fn,
 body .change-gravatar .br-icon {
   display: none;
 }
 
-body.br-blinded .change-gravatar .br-redacted {
+body.br-blinded div.br-vcard>img.gravatar {
   visibility: hidden;
 }
 
+body.br-blinded :not(.change-gravatar)>.br-vcard::after {
+  content: " [redacted]";
+}
+
 img.br-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
+  padding: 2px;
   cursor: pointer;
-  vertical-align: sub;
+  vertical-align: bottom;
 }

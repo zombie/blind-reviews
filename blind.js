@@ -34,14 +34,13 @@ function submitter() {
 function augment(user) {
   const vcards = document.querySelectorAll(`.${user}`);
   for (const vcard of vcards) {
-    vcard.innerHTML = `
-      <img class=br-icon src="${icon}" title="Blind Reviews">
-      <span class=br-redacted>[redacted]</span>
-      <span class=br-original>${vcard.innerHTML}</span>`;
-    vcard.firstElementChild.addEventListener("click", () => {
-      // Work around double context menus for the icon.
-      $.contextMenu("destroy", `.${user}`);
-    });
+    const img = document.createElement("img");
+    img.title = "Blind Reviews";
+    img.className = "br-icon";
+    img.src = icon;
+
+    vcard.parentElement.insertBefore(img, vcard);
+    vcard.classList.toggle("br-vcard", true);
   }
 }
 

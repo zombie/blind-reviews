@@ -1,22 +1,42 @@
 "use strict";
 
-const {$, BUGZILLA} = window.wrappedJSObject;
-const icon = browser.runtime.getURL("icon.png");
+const {$, BUGZILLA: {bug_id, user}} = window.wrappedJSObject;
 
-/**
- * Toggles the page between blinded and revealed modes.
- */
-function toggle() {
-  document.body.classList.toggle("br-blinded");
+async function storage(id, data = {}) {
+  const bug = (await browser.storage.local.get({[id]: {}}))[id];
+  if (data.author) {
+    bug.author = data.author;
+  }
+  if ("visible" in data) {
+    bug.visible = data.visible;
+  }
+  if (Object.keys(bug).length) {
+    await browser.storage.local.set({[id]: bug});
+  }
+  return bug;
 }
 
-/**
- * Detect an active review requests on the bug page.
- * @returns {string} the submitter's vcard ID css class
- */
+function setVisible(visible) {
+  const options = {
+    trigger: "left",
+    selector: `.br-icon`,
+    items: [{
+      name: visible ? "Redact" : "Uncover",
+    }],
+    async callback() {
+      await storage(bug_id, {visible: !visible});
+      setVisible(!visible);
+    },
+  };
+  $.contextMenu("destroy", ".br-icon");
+  $.contextMenu(cloneInto(options, window, {cloneFunctions: true}));
+
+  document.body.classList.toggle("br-blinded", !visible);
+}
+
+// Detect an active review request on the bug page.
 function submitter() {
-  const user = BUGZILLA.user.id;
-  const flags = document.querySelectorAll(`div.attach-flag .vcard_${user}`);
+  const flags = document.querySelectorAll(`div.attach-flag .vcard_${user.id}`);
 
   for (const f of flags) {
     const type = f.previousElementSibling.textContent.trim();
@@ -27,44 +47,30 @@ function submitter() {
   }
 }
 
-/**
- * Detects any active review requests on the bug page.
- * @arg {string} user vcard_ID css class
- */
-function augment(user) {
-  const vcards = document.querySelectorAll(`.${user}`);
+// Augment any mention of the author across the bug page.
+function augment(author) {
+  const vcards = document.querySelectorAll(`.${author}`);
   for (const vcard of vcards) {
-    const img = document.createElement("img");
-    img.title = "Blind Reviews";
-    img.className = "br-icon";
-    img.src = icon;
+    const icon = document.createElement("img");
+    icon.src = browser.runtime.getURL("icon.png");
+    icon.title = "Blind Reviews";
+    icon.className = "br-icon";
 
-    vcard.parentElement.insertBefore(img, vcard);
+    vcard.parentElement.insertBefore(icon, vcard);
     vcard.classList.toggle("br-vcard", true);
   }
 }
 
-/**
- * Activate the extension if there are any review requests.
- */
-function activate() {
-  const user = submitter();
-  if (!user) {
-    return;
+async function init() {
+  const author = submitter();
+  const bug = await storage(bug_id, {author});
+  if (bug.author) {
+    augment(bug.author);
+    setVisible(bug.visible);
+
+    // The people module summary reveals assignee.
+    document.getElementById("module-people-subtitle").innerHTML = "";
   }
-  augment(user);
-
-  const options = {
-    trigger: "left",
-    selector: `.br-icon`,
-    items: [{name: "Toggle"}],
-    callback: toggle,
-  };
-  $.contextMenu(cloneInto(options, window, {cloneFunctions: true}));
-
-  // The people module summary reveals assignee.
-  document.getElementById("module-people-subtitle").innerHTML = "";
-  toggle();
 }
 
-activate();
+init();

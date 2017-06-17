@@ -1,10 +1,12 @@
 {
   "manifest_version": 2,
 
-  "version": "0.1",
+  "version": "0.2",
   "name": "blind-reviews",
   "description": "Blind Reviews BMO Experiment",
   "homepage_url": "https://github.com/zombie/blind-reviews/",
+
+  "permissions": ["storage"],
 
   "content_scripts": [
     {

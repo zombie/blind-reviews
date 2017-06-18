@@ -14,7 +14,9 @@
         "https://bugzilla.mozilla.org/show_bug.cgi*",
         "https://bugzilla-dev.allizom.org/show_bug.cgi*",
         "https://bugzilla.mozilla.org/page.cgi?id=splinter.html*",
-        "https://bugzilla-dev.allizom.org/page.cgi?id=splinter.html*"
+        "https://bugzilla-dev.allizom.org/page.cgi?id=splinter.html*",
+        "https://bugzilla.mozilla.org/page.cgi?id=mydashboard.html*",
+        "https://bugzilla-dev.allizom.org/page.cgi?id=mydashboard.html*"
       ],
       "run_at": "document_end",
       "css": ["blind.css"],

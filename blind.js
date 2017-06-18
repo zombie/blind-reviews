@@ -1,7 +1,7 @@
 "use strict";
 
 const {$, BUGZILLA, Splinter} = window.wrappedJSObject;
-const bug_id = BUGZILLA.bug_id || Splinter.bugId;
+const bug_id = BUGZILLA.bug_id || (Splinter && Splinter.bugId);
 const user = BUGZILLA.user;
 
 async function storage(id, data = {}) {
@@ -114,10 +114,32 @@ async function splinter() {
   setVisible(bug.visible);
 }
 
+function dashboard() {
+  const table = document.querySelector("#requestee_table .yui3-datatable-data");
+
+  const onLoaded = async () => {
+    for (const flag of table.children) {
+      const [requester, type, bug] = flag.children;
+      const {visible} = await storage(bug.textContent);
+      if (type.textContent === "review" && !visible) {
+        requester.textContent = "[redacted]";
+      }
+    }
+  };
+
+  const observer = new MutationObserver(onLoaded);
+  observer.observe(table, {childList: true});
+}
+
+function page_cgi() {
+  const dash = location.search.startsWith("?id=mydashboard.html");
+  window.addEventListener("load", dash ? dashboard : splinter);
+}
+
 function init() {
   const PAGES = {
     "/show_bug.cgi": show_bug,
-    "/page.cgi": window.addEventListener("load", splinter),
+    "/page.cgi": page_cgi,
   };
   PAGES[window.location.pathname]();
 }

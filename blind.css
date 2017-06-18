@@ -1,5 +1,8 @@
 
 body.br-blinded div.br-vcard span.fn,
+body.br-blinded div.br-vcard span#attachCreator,
+body.br-blinded div.br-vcard span#bugReporter,
+body.br-blinded td.br-vcard span[title],
 body .change-gravatar .br-icon {
   display: none;
 }
@@ -8,7 +11,10 @@ body.br-blinded div.br-vcard>img.gravatar {
   visibility: hidden;
 }
 
-body.br-blinded :not(.change-gravatar)>.br-vcard::after {
+body.br-blinded :not(.change-gravatar)>div:not(#attachInfo):not(#bugInfo).br-vcard::after,
+body.br-blinded #attachInfo.br-vcard .br-r::after,
+body.br-blinded #bugInfo.br-vcard .br-r::after,
+body.br-blinded td.br-vcard .br-r::after {
   content: " [redacted]";
 }
 

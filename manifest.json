@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "version": "0.2",
+  "version": "0.3",
   "name": "blind-reviews",
   "description": "Blind Reviews BMO Experiment",
   "homepage_url": "https://github.com/zombie/blind-reviews/",
@@ -11,11 +11,14 @@
   "content_scripts": [
     {
       "matches": [
+        "https://bugzilla.mozilla.org/request.cgi*",
         "https://bugzilla.mozilla.org/show_bug.cgi*",
-        "https://bugzilla-dev.allizom.org/show_bug.cgi*",
         "https://bugzilla.mozilla.org/page.cgi?id=splinter.html*",
-        "https://bugzilla-dev.allizom.org/page.cgi?id=splinter.html*",
         "https://bugzilla.mozilla.org/page.cgi?id=mydashboard.html*",
+
+        "https://bugzilla-dev.allizom.org/request.cgi*",
+        "https://bugzilla-dev.allizom.org/show_bug.cgi*",
+        "https://bugzilla-dev.allizom.org/page.cgi?id=splinter.html*",
         "https://bugzilla-dev.allizom.org/page.cgi?id=mydashboard.html*"
       ],
       "run_at": "document_end",

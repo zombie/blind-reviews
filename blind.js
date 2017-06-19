@@ -79,6 +79,26 @@ async function show_bug() {
   }
 }
 
+async function request_cgi() {
+  const user = document.querySelector("#moz_login span.anchor").textContent;
+  const headers = document.querySelectorAll("h3");
+  for (const h of headers) {
+    if (!h.textContent.endsWith("review")) {
+      continue;
+    }
+    for (const tr of h.nextElementSibling.querySelectorAll("tr")) {
+      const a = tr.querySelector("a[href^='show_bug.cgi?id=']");
+      const bug_id = a && a.href.match(/(\d+)$/)[1];
+      const bug = a && await storage(bug_id);
+      const td = tr.firstElementChild;
+
+      if (!td.textContent.includes(user) && bug && !bug.visible) {
+        td.textContent = "[redacted]";
+      }
+    }
+  }
+}
+
 async function splinter() {
   const bug = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
@@ -139,6 +159,7 @@ function page_cgi() {
 function init() {
   const PAGES = {
     "/show_bug.cgi": show_bug,
+    "/request.cgi": request_cgi,
     "/page.cgi": page_cgi,
   };
   PAGES[window.location.pathname]();

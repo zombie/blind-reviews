@@ -1,10 +1,20 @@
 {
   "manifest_version": 2,
 
-  "version": "0.3",
+  "version": "0.4",
   "name": "blind-reviews",
   "description": "Blind Reviews BMO Experiment",
   "homepage_url": "https://github.com/zombie/blind-reviews/",
+
+  "applications": {
+    "gecko": {
+      "id": "blind-reviews@allizom.org"
+    }
+  },
+
+  "icons": {
+    "96": "icon.png"
+  },
 
   "permissions": ["storage"],
 

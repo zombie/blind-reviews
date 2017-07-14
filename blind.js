@@ -2,12 +2,15 @@
 
 const {$, BUGZILLA, Splinter} = window.wrappedJSObject;
 const bug_id = BUGZILLA.bug_id || (Splinter && Splinter.bugId);
-const user = BUGZILLA.user;
+const {user, api_token} = BUGZILLA;
 
 async function storage(id, data = {}) {
   const bug = (await browser.storage.local.get({[id]: {}}))[id];
   if (data.author) {
     bug.author = data.author;
+  }
+  if (data.published) {
+    bug.published = data.published;
   }
   if ("visible" in data) {
     bug.visible = data.visible;
@@ -99,6 +102,38 @@ async function request_cgi() {
   }
 }
 
+// Send the blind review flag CC via the bugzilla rest API
+function sendFlag(flag) {
+  const url = `https://${location.host}/rest/bug/${bug_id}?Bugzilla_api_token=${api_token}`;
+  return fetch(url, {
+    method: "PUT",
+    credentials: "include",
+    headers: new Headers({"Content-Type": "application/json"}),
+    body: JSON.stringify({cc: {add: [`${flag}-blind-review@mozilla.bugs`]}}),
+  });
+}
+
+// Add the <select> box for setting the blind review flag
+function addFlagging(bug) {
+  const box = document.querySelector("#buttonBox");
+  const publish = document.querySelector("#publishButton");
+
+  const options = ["don't log this review", "fully blind", "partially blind"];
+  const select = document.createElement("select");
+  select.append(...options.map(o => new Option(o)));
+
+  select.selectedIndex = !bug.visible;
+  publish.addEventListener("click", () => {
+    storage(bug_id, {visible: true, published: true});
+    if (select.selectedIndex > 0) {
+      sendFlag(select.selectedIndex === 1 ? "fully" : "partially");
+    }
+  });
+
+  box.insertBefore(select, box.firstChild);
+  box.insertBefore(icon(), select);
+}
+
 async function splinter() {
   const bug = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
@@ -132,6 +167,9 @@ async function splinter() {
   }
 
   setVisible(bug.visible);
+  if (!bug.published) {
+    addFlagging(bug);
+  }
 }
 
 function dashboard() {

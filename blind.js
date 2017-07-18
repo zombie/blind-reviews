@@ -44,9 +44,9 @@ function submitter() {
   const flags = document.querySelectorAll(`div.attach-flag .vcard_${user.id}`);
 
   for (const f of flags) {
-    const type = f.previousElementSibling.textContent.trim();
+    const type = f.previousElementSibling;
     const vcard = f.parentNode.firstElementChild.className.match(/vcard_\d+/);
-    if (vcard && type === "review?") {
+    if (vcard && type && type.textContent.endsWith("review?")) {
       return vcard[0];
     }
   }

@@ -134,6 +134,16 @@ function addFlagging(bug) {
   box.insertBefore(icon(), select);
 }
 
+async function patchIntro(records) {
+  for (const record of records) {
+    for (const comment of record.addedNodes) {
+      if (comment.textContent.startsWith("# User ")) {
+        comment.textContent = "# User [redacted]";
+      }
+    }
+  }
+}
+
 async function splinter() {
   const bug = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
@@ -159,12 +169,11 @@ async function splinter() {
     m.parentNode.classList.toggle("br-vcard", true);
   }
 
-  const comments = document.querySelectorAll("#patchIntro>.pre-wrap");
-  for (const c of comments) {
-    if (!bug.visible && c.textContent.startsWith("# User ")) {
-      c.textContent = "# User [redacted]";
-    }
-  }
+  const intro = document.querySelector("#patchIntro");
+  const observer = new MutationObserver(patchIntro);
+  observer.observe(intro, {childList: true});
+
+  patchIntro(bug);
 
   setVisible(bug.visible);
   if (!bug.published) {
@@ -172,26 +181,29 @@ async function splinter() {
   }
 }
 
-function dashboard() {
-  const table = document.querySelector("#requestee_table .yui3-datatable-data");
+async function onChild(records) {
+  for (const record of records) {
+    for (const flag of record.addedNodes) {
+      const [author, type, bug] = flag.children;
+      const {visible} = await storage(bug && bug.textContent);
 
-  const onLoaded = async () => {
-    for (const flag of table.children) {
-      const [requester, type, bug] = flag.children;
-      const {visible} = await storage(bug.textContent);
-      if (type.textContent === "review" && !visible) {
-        requester.textContent = "[redacted]";
+      if (type && type.textContent === "review" && !visible) {
+        author.textContent = "[redacted]";
       }
     }
-  };
+  }
+}
 
-  const observer = new MutationObserver(onLoaded);
-  observer.observe(table, {childList: true});
+function dashboard() {
+  const observer = new MutationObserver(onChild);
+  const table = document.querySelector("#requestee_table");
+  observer.observe(table, {childList: true, subtree: true});
 }
 
 function page_cgi() {
   const dash = location.search.startsWith("?id=mydashboard.html");
-  window.addEventListener("load", dash ? dashboard : splinter);
+  const page = dash ? dashboard : splinter;
+  page();
 }
 
 function init() {

@@ -134,17 +134,7 @@ function addFlagging(bug) {
   box.insertBefore(icon(), select);
 }
 
-async function patchIntro(records) {
-  for (const record of records) {
-    for (const comment of record.addedNodes) {
-      if (comment.textContent.startsWith("# User ")) {
-        comment.textContent = "# User [redacted]";
-      }
-    }
-  }
-}
-
-async function splinter() {
+async function splinterActual() {
   const bug = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
   const br = document.querySelector("#bugReporter");
@@ -169,16 +159,23 @@ async function splinter() {
     m.parentNode.classList.toggle("br-vcard", true);
   }
 
-  const intro = document.querySelector("#patchIntro");
-  const observer = new MutationObserver(patchIntro);
-  observer.observe(intro, {childList: true});
-
-  patchIntro(bug);
+  const intro = document.querySelectorAll("#patchIntro>.pre-wrap");
+  for (const line of intro) {
+    if (line.textContent.startsWith("# User ")) {
+      line.textContent = "# User [redacted]";
+    }
+  }
 
   setVisible(bug.visible);
   if (!bug.published) {
     addFlagging(bug);
   }
+}
+
+function splinter() {
+  const author = document.querySelector("#attachCreator");
+  const observer = new MutationObserver(splinterActual);
+  observer.observe(author, {childList: true});
 }
 
 async function onChild(records) {

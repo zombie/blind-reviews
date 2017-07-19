@@ -26,7 +26,7 @@
       ],
       "run_at": "document_end",
       "css": ["blind.css"],
-      "js": ["common.js"]
+      "js": ["common.js", "request.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/show_bug.cgi*",
@@ -34,7 +34,7 @@
       ],
       "run_at": "document_end",
       "css": ["blind.css"],
-      "js": ["common.js"]
+      "js": ["common.js", "show_bug.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/page.cgi?id=splinter.html*",
@@ -42,7 +42,7 @@
       ],
       "run_at": "document_end",
       "css": ["blind.css"],
-      "js": ["common.js"]
+      "js": ["common.js", "splinter.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/page.cgi?id=mydashboard.html*",
@@ -50,7 +50,7 @@
       ],
       "run_at": "document_end",
       "css": ["blind.css"],
-      "js": ["common.js"]
+      "js": ["common.js", "mydashboard.js"]
     }
   ],
 

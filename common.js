@@ -8,9 +8,9 @@ const {user, api_token} = BUGZILLA;
 
 async function storage(id, visible) {
   if (visible != null) {
-    return browser.storage.local.set({[id]: visible | 0});
+    return browser.storage.sync.set({[id]: visible | 0});
   }
-  return (await browser.storage.local.get(String(id)))[id];
+  return (await browser.storage.sync.get(String(id)))[id];
 }
 
 function setVisible(visible) {

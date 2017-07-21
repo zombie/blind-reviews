@@ -27,10 +27,10 @@ function augment(author) {
 
 async function init() {
   const author = submitter();
-  const bug = await storage(bug_id, {author});
-  if (bug.author) {
-    augment(bug.author);
-    setVisible(bug.visible);
+  const visible = await storage(bug_id);
+  if (author) {
+    augment(author);
+    setVisible(visible);
 
     // The people module summary reveals assignee.
     document.getElementById("module-people-subtitle").innerHTML = "";

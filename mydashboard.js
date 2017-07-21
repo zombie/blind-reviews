@@ -6,7 +6,7 @@ async function onChild(records) {
   for (const record of records) {
     for (const flag of record.addedNodes) {
       const [author, type, bug] = flag.children;
-      const {visible} = await storage(bug && bug.textContent);
+      const visible = await storage(bug.textContent);
 
       if (type && type.textContent === "review" && !visible) {
         author.textContent = "[redacted]";

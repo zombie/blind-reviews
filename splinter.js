@@ -24,7 +24,7 @@ function addFlagging(bug) {
 
   select.selectedIndex = !bug.visible;
   publish.addEventListener("click", () => {
-    storage(bug_id, {visible: true, published: true});
+    storage(bug_id, true);
     if (select.selectedIndex > 0) {
       sendFlag(select.selectedIndex === 1 ? "fully" : "partially");
     }
@@ -35,7 +35,7 @@ function addFlagging(bug) {
 }
 
 async function splinterActual() {
-  const bug = await storage(bug_id);
+  const visible = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
   const br = document.querySelector("#bugReporter");
   const mentions = [ac];
@@ -66,10 +66,9 @@ async function splinterActual() {
     }
   }
 
-  setVisible(bug.visible);
-  if (!bug.published) {
-    addFlagging(bug);
-  }
+  setVisible(visible);
+  // TODO: fix flagging
+  // addFlagging(bug);
 }
 
 function init() {

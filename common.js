@@ -6,21 +6,11 @@ const {user, api_token} = BUGZILLA;
 
 /* exported user api_token storage icon setVisible */
 
-async function storage(id, data = {}) {
-  const bug = (await browser.storage.local.get({[id]: {}}))[id];
-  if (data.author) {
-    bug.author = data.author;
+async function storage(id, visible) {
+  if (visible != null) {
+    return browser.storage.local.set({[id]: visible | 0});
   }
-  if (data.published) {
-    bug.published = data.published;
-  }
-  if ("visible" in data) {
-    bug.visible = data.visible;
-  }
-  if (Object.keys(bug).length) {
-    await browser.storage.local.set({[id]: bug});
-  }
-  return bug;
+  return (await browser.storage.local.get(String(id)))[id];
 }
 
 function setVisible(visible) {
@@ -31,7 +21,7 @@ function setVisible(visible) {
       name: visible ? "Redact" : "Uncover",
     }],
     async callback() {
-      await storage(bug_id, {visible: !visible});
+      await storage(bug_id, !visible);
       setVisible(!visible);
     },
   };

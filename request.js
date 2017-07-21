@@ -12,10 +12,10 @@ async function init() {
     for (const tr of h.nextElementSibling.querySelectorAll("tr")) {
       const a = tr.querySelector("a[href^='show_bug.cgi?id=']");
       const bug_id = a && a.href.match(/(\d+)$/)[1];
-      const bug = a && await storage(bug_id);
+      const visible = await storage(bug_id);
       const td = tr.firstElementChild;
 
-      if (!td.textContent.includes(user) && bug && !bug.visible) {
+      if (a && !td.textContent.includes(user) && !visible) {
         td.textContent = "[redacted]";
       }
     }

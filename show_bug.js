@@ -25,6 +25,18 @@ function augment(author) {
   }
 }
 
+async function mozreview(records) {
+  const visible = await storage(bug_id);
+  for (const record of records) {
+    for (const tr of record.addedNodes) {
+      const td = tr.firstElementChild;
+      if (td && td.textContent && !visible) {
+        td.textContent = "";
+      }
+    }
+  }
+}
+
 async function init() {
   const author = submitter();
   const visible = await storage(bug_id);
@@ -34,6 +46,10 @@ async function init() {
 
     // The people module summary reveals assignee.
     document.getElementById("module-people-subtitle").innerHTML = "";
+
+    const tbody = document.querySelector("tbody.mozreview-request");
+    const observer = new MutationObserver(mozreview);
+    observer.observe(tbody, {childList: true});
   }
 }
 

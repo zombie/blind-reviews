@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "version": "0.6",
+  "version": "0.7",
   "name": "blind-reviews",
   "description": "Blind Reviews BMO Experiment",
   "homepage_url": "https://github.com/zombie/blind-reviews/",

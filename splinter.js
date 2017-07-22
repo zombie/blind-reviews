@@ -2,39 +2,47 @@
 
 /* import-globals-from common.js */
 
-// Send the blind review flag CC via the bugzilla rest API
-function sendFlag(flag) {
+const FLAGS = ["fully-blind-review@mozilla.bugs", "partially-blind-review@mozilla.bugs"];
+
+// Make a Bugzilla rest API request
+async function rest(method, data) {
   const url = `https://${location.host}/rest/bug/${bug_id}?Bugzilla_api_token=${api_token}`;
-  return fetch(url, {
-    method: "PUT",
+  const response = await fetch(url, {
+    method,
     credentials: "include",
     headers: new Headers({"Content-Type": "application/json"}),
-    body: JSON.stringify({cc: {add: [`${flag}-blind-review@mozilla.bugs`]}}),
+    body: JSON.stringify(data),
   });
+  return response.json();
 }
 
-// Add the <select> box for setting the blind review flag
-function addFlagging(bug) {
+// Add <select> for picking the blind review flag
+function addTracking(visible) {
   const box = document.querySelector("#buttonBox");
-  const publish = document.querySelector("#publishButton");
 
-  const options = ["don't log this review", "fully blind", "partially blind"];
+  const options = ["fully blind", "partially blind", "don't track this review"];
+
   const select = document.createElement("select");
   select.append(...options.map(o => new Option(o)));
+  select.selectedIndex = [undefined, 0, 1].indexOf(visible);
 
-  select.selectedIndex = !bug.visible;
-  publish.addEventListener("click", () => {
-    storage(bug_id, true);
-    if (select.selectedIndex > 0) {
-      sendFlag(select.selectedIndex === 1 ? "fully" : "partially");
+  const original = document.querySelector("#publishButton");
+  const publish = original.cloneNode();
+  original.replaceWith(publish);
+
+  publish.addEventListener("click", async () => {
+    if (select.selectedIndex < 2) {
+      await rest("PUT", {cc: {add: [FLAGS[select.selectedIndex]]}});
     }
+    await storage(bug_id, true);
+    Splinter.publishReview();
   });
 
   box.insertBefore(select, box.firstChild);
   box.insertBefore(icon(), select);
 }
 
-async function splinterActual() {
+async function splinter() {
   const visible = await storage(bug_id);
   const ac = document.querySelector("#attachCreator");
   const br = document.querySelector("#bugReporter");
@@ -67,14 +75,21 @@ async function splinterActual() {
   }
 
   setVisible(visible);
-  // TODO: fix flagging
-  // addFlagging(bug);
+
+  const json = await rest();
+  if (!json.bugs[0].cc.some(m => FLAGS.includes(m))) {
+    addTracking(visible);
+  }
 }
 
 function init() {
   const author = document.querySelector("#attachCreator");
-  const observer = new MutationObserver(splinterActual);
-  observer.observe(author, {childList: true});
+  if (author.textContent) {
+    splinter();
+  } else {
+    const observer = new MutationObserver(splinter);
+    observer.observe(author, {childList: true});
+  }
 }
 
 init();

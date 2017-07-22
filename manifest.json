@@ -51,6 +51,13 @@
       "run_at": "document_end",
       "css": ["blind.css"],
       "js": ["common.js", "mydashboard.js"]
+    }, {
+      "matches": [
+        "https://reviewboard.mozilla.org/r/*"
+      ],
+      "run_at": "document_end",
+      "css": ["blind.css"],
+      "js": ["reviewboard.js"]
     }
   ],
 

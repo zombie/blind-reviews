@@ -44,6 +44,13 @@ async function init() {
     augment(author);
     setVisible(visible);
 
+    const changes = document.querySelectorAll(".activity>.change");
+    for (const c of changes) {
+      if (c.textContent.startsWith("Assignee:")) {
+        c.textContent = "Assignee: [redacted]";
+      }
+    }
+
     // The people module summary reveals assignee.
     document.getElementById("module-people-subtitle").innerHTML = "";
 

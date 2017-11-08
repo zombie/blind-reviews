@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "version": "0.8",
+  "version": "1.0",
   "name": "blind-reviews",
-  "description": "Blind Reviews BMO Experiment",
+  "description": "Blind Reviews Experiment",
   "homepage_url": "https://github.com/zombie/blind-reviews/",
 
   "applications": {
@@ -25,39 +25,39 @@
         "https://bugzilla-dev.allizom.org/request.cgi*"
       ],
       "run_at": "document_end",
-      "css": ["blind.css"],
-      "js": ["common.js", "request.js"]
+      "css": ["bugzilla/blind.css"],
+      "js": ["bugzilla/common.js", "bugzilla/request.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/show_bug.cgi*",
         "https://bugzilla-dev.allizom.org/show_bug.cgi*"
       ],
       "run_at": "document_end",
-      "css": ["blind.css"],
-      "js": ["common.js", "show_bug.js"]
+      "css": ["bugzilla/blind.css"],
+      "js": ["bugzilla/common.js", "bugzilla/show_bug.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/page.cgi?id=splinter.html*",
         "https://bugzilla-dev.allizom.org/page.cgi?id=splinter.html*"
       ],
       "run_at": "document_end",
-      "css": ["blind.css"],
-      "js": ["common.js", "splinter.js"]
+      "css": ["bugzilla/blind.css"],
+      "js": ["bugzilla/common.js", "bugzilla/splinter.js"]
     }, {
       "matches": [
         "https://bugzilla.mozilla.org/page.cgi?id=mydashboard.html*",
         "https://bugzilla-dev.allizom.org/page.cgi?id=mydashboard.html*"
       ],
       "run_at": "document_end",
-      "css": ["blind.css"],
-      "js": ["common.js", "mydashboard.js"]
+      "css": ["bugzilla/blind.css"],
+      "js": ["bugzilla/common.js", "bugzilla/mydashboard.js"]
     }, {
       "matches": [
         "https://reviewboard.mozilla.org/r/*"
       ],
       "run_at": "document_end",
-      "css": ["blind.css"],
-      "js": ["reviewboard.js"]
+      "css": ["bugzilla/blind.css"],
+      "js": ["bugzilla/reviewboard.js"]
     }
   ],
 

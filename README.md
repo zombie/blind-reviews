@@ -1,6 +1,6 @@
 Blind Reviews
 =============
-Blind Reviews BMO Experiment
+Blind Reviews Experiment, browser extension for Bugzilla and Github
 
 
 Background

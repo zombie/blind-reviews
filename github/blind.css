@@ -1,0 +1,9 @@
+
+li.js-notification.br-blind>ul>li.tooltipped {
+  display: none;
+}
+
+li.js-issue-row.br-blind>div>div>div>span.opened-by,
+li.js-issue-row.br-blind>div>div>div>div>a.avatar {
+  display: none;
+}

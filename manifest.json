@@ -20,6 +20,13 @@
 
   "content_scripts": [
     {
+      "matches": ["https://github.com/*"],
+      "run_at": "document_start",
+      "css": ["github/blind.css"],
+      "js": ["github/common.js"]
+    },
+
+    {
       "matches": [
         "https://bugzilla.mozilla.org/request.cgi*",
         "https://bugzilla-dev.allizom.org/request.cgi*"

@@ -48,6 +48,6 @@ observer.on("div.js-comment-container:first-child a.author", a => {
   }
 });
 
-observer.on("div.pull-request-tab-content :-moz-any(img.avatar, a.commit-author)", x => {
+observer.on("div.pull-request-tab-content img.avatar, div.pull-request-tab-content a.commit-author", x => {
   x.style.visibility = "hidden";
 });

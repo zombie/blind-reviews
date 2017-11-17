@@ -33,14 +33,21 @@ const observer = {
   },
 };
 
-observer.on("li.js-notification>span>a", a => {
-  if (parsePR(a.href)) {
-    a.closest("li").classList.add("br-blind");
+observer.on("li.js-notification>span>svg.octicon-git-pull-request", a => {
+  a.closest("li").classList.add("br-blind");
+});
+
+observer.on("li.js-issue-row>div>div>span>svg.octicon-git-pull-request", a => {
+  a.closest("li").classList.add("br-blind");
+});
+
+observer.on("div.js-comment-container:first-child a.author", a => {
+  const author = a.textContent;
+  for (const x of document.querySelectorAll(`a[href="/${author}"],img[alt="@${author}"]`)) {
+    x.style.visibility = "hidden";
   }
 });
 
-observer.on("li.js-issue-row>div>div>a", a => {
-  if (parsePR(a.href)) {
-    a.closest("li").classList.add("br-blind");
-  }
+observer.on("div.pull-request-tab-content :-moz-any(img.avatar, a.commit-author)", x => {
+  x.style.visibility = "hidden";
 });

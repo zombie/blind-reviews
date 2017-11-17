@@ -1,6 +1,6 @@
 
-li.js-notification.br-blind>ul>li.tooltipped {
-  display: none;
+li.js-notification.br-blind>ul>div.AvatarStack {
+  display: none !important;
 }
 
 li.js-issue-row.br-blind>div>div>div>span.opened-by,

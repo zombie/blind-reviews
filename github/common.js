@@ -8,17 +8,20 @@ function parsePR(url) {
 const observer = {
   listeners: new Map(),
 
-  emit(node) {
-    if (node instanceof Element) {
-      for (const [selector, listener] of observer.listeners) {
-        node.querySelectorAll(selector).forEach(listener);
-      }
-    }
-  },
-
   observe(mutations) {
-    for (const record of mutations) {
-      record.addedNodes.forEach(observer.emit);
+    // Multiple events get coalesced when inserting nested nodes,
+    // using a Set ensures we run the listener once per matched node.
+    for (const [selector, listener] of observer.listeners) {
+      const matched = new Set();
+
+      for (const record of mutations) {
+        for (const node of record.addedNodes) {
+          if (node instanceof Element) {
+            node.querySelectorAll(selector).forEach(m => matched.add(m));
+          }
+        }
+      }
+      matched.forEach(listener);
     }
   },
 

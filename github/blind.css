@@ -1,27 +1,21 @@
 
-li.js-notification.br-blind>ul>div.AvatarStack {
-  display: none !important;
-}
-
-li.js-issue-row.br-blind>div>div>div>span.opened-by,
-li.js-issue-row.br-blind>div>div>div>div>a.avatar {
-  display: none;
-}
-
+li.js-issue-row.br-blind span.opened-by::after,
 span.br-redacted::after {
   content: "[redacted]";
 }
-body:not(.br-blinded) span.br-redacted {
-  display: none !important;
+
+li.js-notification.br-blind div.AvatarStack .tooltipped,
+li.js-issue-row.br-blind span.opened-by > a,
+body:not(.br-blinded) span.br-redacted,
+body.br-blinded .br-author {
+    display: none !important;
 }
 
-body.br-blinded .br-author {
-  display: none !important;
-}
+li.js-notification.br-blind div.AvatarStack::after,
 body.br-blinded span.br-avatar {
   width: 16px;
   height: 16px;
-  background-image: url("../icon.png") 0/contain;
+  background: url("../icon.png") 0/contain;
   display: inline-block;
   vertical-align: sub;
 }

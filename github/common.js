@@ -1,8 +1,20 @@
 "use strict";
 
 function parsePR(url) {
-  const match = url.match(/^https\:\/\/github.com\/([\w-]+\/[\w-]+\/pull\/[\d]+)/);
-  return match && match[1];
+  const match = url.match(/^(https:\/\/github.com)?\/([\w-]+\/[\w-]+\/pull\/[\d]+)/);
+  return match && match[2];
+}
+
+function storage(pr, visible) {
+  if (!pr) {
+    pr = parsePR(location.href);
+  }
+  return new Promise(async resolve => {
+    if (visible != null) {
+      return chrome.storage.sync.set({[pr]: +visible}, resolve);
+    }
+    chrome.storage.sync.get(pr, result => resolve(result[pr]));
+  });
 }
 
 const observer = {
@@ -37,13 +49,14 @@ const observer = {
   },
 };
 
-observer.on("li.js-notification>span>svg.octicon-git-pull-request", a => {
-  a.closest("li").classList.add("br-blind");
-});
+async function listing(svg) {
+  const li = svg.closest("li");
+  const href = li.querySelector(`a[href*="/pull/"`).getAttribute("href");
+  li.classList.toggle("br-blind", !await storage(parsePR(href)));
+}
 
-observer.on("li.js-issue-row>div>div>span>svg.octicon-git-pull-request", a => {
-  a.closest("li").classList.add("br-blind");
-});
+observer.on("li.js-notification svg.octicon-git-pull-request", listing);
+observer.on("li.js-issue-row svg.octicon-git-pull-request", listing);
 
 function augment(a) {
   if (a.classList.contains("br-author")) {
@@ -90,22 +103,26 @@ observer.on("div.commit-meta > a.commit-author", augment);
 observer.on("div.flash > div > a.text-emphasized", augment);
 observer.on("div.gh-header-meta span.head-ref > span.user", augment);
 
-function toggle(e) {
-  if (!e || e.target.classList.contains("br-toggle")) {
-    document.body.classList.toggle("br-blinded");
+async function toggle(e) {
+  if (e.target.classList.contains("br-toggle")) {
+    await storage(null, !document.body.classList.toggle("br-blinded"));
     document.body.dispatchEvent(new Event("click", {bubbles: true}));
   }
 }
 
-observer.on("a.author.pull-header-username", a => {
+async function prHeader(a) {
   if (a.classList.contains("br-author")) {
     return;
   }
 
   const parent = a.parentElement.previousElementSibling;
-  parent.addEventListener("click", toggle);
   parent.innerHTML += control;
-  toggle();
+
+  document.body.classList.toggle("br-blinded", !await storage());
 
   augment(a);
-});
+}
+
+observer.on("a.author.pull-header-username", prHeader);
+
+document.documentElement.addEventListener("click", toggle);

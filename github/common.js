@@ -1,7 +1,7 @@
 "use strict";
 
 function parsePR(url) {
-  const match = url.match(/^(https:\/\/github.com)?\/([\w-]+\/[\w-]+\/pull\/[\d]+)/);
+  const match = url.match("^(https://github.com)?/([\w-]+/[\w-]+/pull/[\d]+)");
   return match && match[2];
 }
 
@@ -58,6 +58,31 @@ async function listing(svg) {
 observer.on("li.js-notification svg.octicon-git-pull-request", listing);
 observer.on("li.js-issue-row svg.octicon-git-pull-request", listing);
 
+function submitReview() {
+  const flag = document.getElementById("br-flag");
+  const text = document.getElementById("pull_request_review_body");
+  if (flag.checked) {
+    text.value += `\n\n[![blind-review](https://github.com/blindreviews3.png)]` +
+      `(https://github.com/zombie/blind-reviews "Review performed in blind mode")`;
+  }
+}
+
+async function addFlag(textarea) {
+  const button = textarea.closest("form").querySelector("button");
+  button.insertAdjacentHTML("beforebegin", `
+    <label style="float: left; margin: 1ex">
+      <input id="br-flag" type="checkbox">
+      Add blind review flag
+    </label>
+  `);
+  if (!await storage()) {
+    document.getElementById("br-flag").checked = true;
+  }
+  button.addEventListener("click", submitReview);
+}
+
+observer.on("#submit-review #pull_request_review_body", addFlag);
+
 function augment(a) {
   if (a.classList.contains("br-author")) {
     return;
@@ -105,7 +130,14 @@ observer.on("div.gh-header-meta span.head-ref > span.user", augment);
 
 async function toggle(e) {
   if (e.target.classList.contains("br-toggle")) {
-    await storage(null, !document.body.classList.toggle("br-blinded"));
+    const visible = !document.body.classList.toggle("br-blinded");
+    await storage(null, visible);
+
+    const flag = document.getElementById("br-flag");
+    if (flag && flag.checked) {
+      flag.checked = false;
+    }
+
     document.body.dispatchEvent(new Event("click", {bubbles: true}));
   }
 }

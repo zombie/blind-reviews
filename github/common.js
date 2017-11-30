@@ -142,6 +142,35 @@ async function toggle(e) {
   }
 }
 
+// Logic to determine if a pull request should be blinded by default.
+function shouldBlind(author) {
+  const user = document.querySelector("li.header-nav-current-user strong");
+
+  // Ignore user's own pull requests.
+  if (user.textContent === author) {
+    return false;
+  }
+
+  const open = document.querySelector("div.gh-header div.State--green");
+
+  // Merged and closed PRs are automatically revealed.
+  if (!open) {
+    return false;
+  }
+
+  const reviews = document.querySelectorAll("div.is-approved a.author");
+
+  // Also, once the user has approved a PR, reveal it.
+  for (const a of reviews) {
+    if (user.textContent === a.textContent) {
+      return false;
+    }
+  }
+
+  // Blind everything else by default.
+  return true;
+}
+
 async function prHeader(a) {
   if (a.classList.contains("br-author")) {
     return;
@@ -150,7 +179,11 @@ async function prHeader(a) {
   const parent = a.parentElement.previousElementSibling;
   parent.innerHTML += control;
 
-  document.body.classList.toggle("br-blinded", !await storage());
+  let visible = await storage();
+  if (visible == null) {
+    visible = !shouldBlind(a.textContent.trim());
+  }
+  document.body.classList.toggle("br-blinded", !visible);
 
   augment(a);
 }

@@ -16,7 +16,7 @@
     "96": "icon.png"
   },
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "https://api.github.com/"],
 
   "content_scripts": [
     {

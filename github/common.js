@@ -1,20 +1,72 @@
 "use strict";
 
-function parsePR(url) {
-  const match = url.match("^(https://github.com)?/([\w-]+/[\w-]+/pull/[\d]+)");
+// Parse a pull request URL, return the slug used to identify the PR.
+function parsePullRequest(url) {
+  url = url || location.href;
+  const match = url.match("^(https://github.com)?/([\\w-]+/[\\w-]+/pull/[\\d]+)");
   return match && match[2];
 }
 
-function storage(pr, visible) {
-  if (!pr) {
-    pr = parsePR(location.href);
-  }
+function storage(url, visible) {
+  const key = parsePullRequest(url);
   return new Promise(async resolve => {
     if (visible != null) {
-      return chrome.storage.sync.set({[pr]: +visible}, resolve);
+      return chrome.storage.sync.set({[key]: +visible}, resolve);
     }
-    chrome.storage.sync.get(pr, result => resolve(result[pr]));
+    chrome.storage.sync.get(key, result => resolve(result[key]));
   });
+}
+
+async function githubAPI(pr, query = "") {
+  pr = pr.replace("/pull/", "/pulls/");
+  const url = `https://api.github.com/repos/${pr}${query}`;
+  let response;
+  response = await fetch(url);
+  let x = response.json();
+  return x;
+}
+
+// Logic to determine if a pull request should be blinded by default.
+function shouldBlind(pr) {
+  const octo = window.wrappedJSObject._octo;
+  const actor = octo && octo.actor && octo.actor.login;
+
+  // Ignore user's own pull requests.
+  if (actor === pr.user.login) {
+    return false;
+  }
+
+  // Closed PRs are automatically revealed.
+  if (pr.state === "closed") {
+    return false;
+  }
+
+  // Also, once the user has approved a pull request.
+  for (const {user, state} of pr.reviews) {
+    if (actor.login === user.login && state === "APPROVED") {
+      return false;
+    }
+  }
+
+  // Blind everything else by default.
+  return true;
+}
+
+// Get info about a pull request: author and visible status.
+async function getPullRequest(url) {
+  const pr = parsePullRequest(url);
+
+  const visible = await storage(url);
+  const info = await githubAPI(pr);
+
+  const author = info.user.login;
+
+  if (visible != null) {
+    return {author, visible};
+  }
+  info.reviews = await githubAPI(pr, "/reviews");
+  let blind = shouldBlind(info);
+  return {author, visible: !blind};
 }
 
 const observer = {
@@ -52,7 +104,8 @@ const observer = {
 async function listing(svg) {
   const li = svg.closest("li");
   const href = li.querySelector(`a[href*="/pull/"`).getAttribute("href");
-  li.classList.toggle("br-blind", !await storage(parsePR(href)));
+  const {visible} = await getPullRequest(href);
+  li.classList.toggle("br-blind", !visible);
 }
 
 observer.on("li.js-notification svg.octicon-git-pull-request", listing);
@@ -83,14 +136,15 @@ async function addFlag(textarea) {
 
 observer.on("#submit-review #pull_request_review_body", addFlag);
 
-function augment(a) {
+async function augment(a) {
   if (a.classList.contains("br-author")) {
     return;
   }
-  const author = document.querySelector("a.author.pull-header-username");
+
+  const {author} = await getPullRequest();
   const who = a.getAttribute("href") || a.getAttribute("alt") || a.textContent;
 
-  if (author && who.endsWith(author.textContent.trim())) {
+  if (who.endsWith(author)) {
     const redacted = document.createElement("span");
     a.parentNode.insertBefore(redacted, a);
     redacted.className = "br-redacted";
@@ -150,7 +204,8 @@ async function prHeader(a) {
   const parent = a.parentElement.previousElementSibling;
   parent.innerHTML += control;
 
-  document.body.classList.toggle("br-blinded", !await storage());
+  const {visible} = await getPullRequest();
+  document.body.classList.toggle("br-blinded", visible);
 
   augment(a);
 }

@@ -16,7 +16,7 @@ describe("Pull Requests (listings)", () => {
     browser.url("/pulls/mentioned");
 
     const prInfo = $(".opened-by").getText();
-    expect(prInfo).to.match(/^#1 opened \d+ days ago by$/);
+    expect(prInfo).to.equal("#1 opened on Nov 23 by");
   });
 });
 
@@ -28,7 +28,7 @@ describe("(single) Pull Request Page", () => {
     expect(topFlash).to.equal("requested your review on this pull request.");
 
     const commentInfo = $("h3.timeline-comment-header-text").getText();
-    expect(commentInfo).to.match(/^commented \d+ days ago$/);
+    expect(commentInfo).to.equal("commented on Nov 23");
 
     const avatar = $("a.participant-avatar").isVisible();
     expect(avatar).to.be.false;

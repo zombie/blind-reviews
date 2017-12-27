@@ -9,4 +9,7 @@ before_script:
   - sleep 3
 
 notifications:
-  irc: "irc.mozilla.org#blindreviews"
+  irc:
+    channels: 
+      - "irc.mozilla.org#blindreviews"
+    on_success: change

@@ -4,7 +4,7 @@
 
   "description": "Blind Reviews Experiment",
   "repository": "zombie/blind-reviews",
-  "license" : "MIT",
+  "license": "MIT",
 
   "scripts": {
     "test": "wdio test/wdio-conf.js"
@@ -12,6 +12,7 @@
 
   "devDependencies": {
     "chai": "^4.1.2",
+    "chromedriver": "^2.34.0",
     "wdio-chromedriver-service": "^0.1.1",
     "wdio-mocha-framework": "^0.2.12",
     "webdriverio": "^4.0.7"

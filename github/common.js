@@ -1,7 +1,8 @@
 "use strict";
 
 function parsePR(url) {
-  const match = url.match("^(https://github.com)?/([\w-]+/[\w-]+/pull/[\d]+)");
+  const re = /^(https:\/\/github.com)?\/([\w-]+\/[\w-]+\/pull\/\d+)/;
+  const match = url.match(re);
   return match && match[2];
 }
 
@@ -9,7 +10,7 @@ function storage(pr, visible) {
   if (!pr) {
     pr = parsePR(location.href);
   }
-  return new Promise(async resolve => {
+  return new Promise(resolve => {
     if (visible != null) {
       return chrome.storage.sync.set({[pr]: +visible}, resolve);
     }
@@ -52,7 +53,16 @@ const observer = {
 async function listing(svg) {
   const li = svg.closest("li");
   const href = li.querySelector(`a[href*="/pull/"`).getAttribute("href");
-  li.classList.toggle("br-blind", !await storage(parsePR(href)));
+
+  let visible = await storage(parsePR(href));
+  if (visible == null) {
+    const author = li.querySelector("span.opened-by > a");
+    const user = document.querySelector("li.header-nav-current-user strong");
+
+    visible = user.textContent === author.textContent;
+  }
+
+  li.classList.toggle("br-blind", !visible);
 }
 
 observer.on("li.js-notification svg.octicon-git-pull-request", listing);

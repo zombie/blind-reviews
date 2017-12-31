@@ -15,8 +15,9 @@ describe("Pull Requests (listings)", () => {
   it("should redact the author", () => {
     browser.url("/pulls/mentioned");
 
-    const prInfo = $(".opened-by").getText();
-    expect(prInfo).to.equal("#1 opened on Nov 23 by");
+    const prInfo = browser.getText(".opened-by");
+    expect(prInfo[0]).to.equal("#1 opened on Nov 23 by");
+    expect(prInfo[1]).to.equal("#2 opened on Nov 13 by blindreviews3");
   });
 });
 

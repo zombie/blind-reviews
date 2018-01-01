@@ -16,8 +16,10 @@ describe("Pull Requests (listings)", () => {
     browser.url("/pulls/mentioned");
 
     const prInfo = browser.getText(".opened-by");
-    expect(prInfo[0]).to.equal("#1 opened on Nov 23 by");
-    expect(prInfo[1]).to.equal("#2 opened on Nov 13 by blindreviews3");
+    expect(prInfo[0]).to.not.contain("zombie");
+
+    // But don't redact user's own PRs in listings.
+    expect(prInfo[1]).to.contain("blindreviews3");
   });
 });
 
@@ -29,7 +31,7 @@ describe("(single) Pull Request Page", () => {
     expect(topFlash).to.equal("requested your review on this pull request.");
 
     const commentInfo = $("h3.timeline-comment-header-text").getText();
-    expect(commentInfo).to.equal("commented on Nov 23");
+    expect(commentInfo).to.not.contain("zombie");
 
     const avatar = $("a.participant-avatar").isVisible();
     expect(avatar).to.be.false;

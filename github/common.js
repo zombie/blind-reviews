@@ -187,7 +187,7 @@ async function prHeader(a) {
   }
 
   const parent = a.parentElement.previousElementSibling;
-  parent.innerHTML += control;
+  parent.insertAdjacentHTML("beforeend", control);
 
   let visible = await storage();
   if (visible == null) {

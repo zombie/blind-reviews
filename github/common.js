@@ -201,3 +201,6 @@ async function prHeader(a) {
 observer.on("a.author.pull-header-username", prHeader);
 
 document.documentElement.addEventListener("click", toggle);
+
+// Clear debris from buggy PR url parsing.
+chrome.storage.sync.remove("null");

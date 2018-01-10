@@ -34,6 +34,14 @@ License
 MIT
 
 
+Related projects
+----------------
+
+ * [Anonymous Github](http://anonymous.4open.science/) is a proxy server to support anonymous browsing of Github repositories for open-science code and data.  You can use it to anonymize Github repositories before referring to them in a double-blind paper submission. ([source repository](https://github.com/tdurieux/anonymous_github/))
+
+ * [Gitmask](http://www.gitmask.com/) is a service that will strip out and replace embedded identification info from commits that you submit, including author names, email and timestamps. ([source repository](https://github.com/AnalogJ/gitmask))
+
+
 [1366429]:
   https://bugzilla.mozilla.org/show_bug.cgi?id=1366429
 [amo]:

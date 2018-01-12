@@ -33,7 +33,7 @@ function setVisible(visible) {
 
 function icon() {
   const img = document.createElement("img");
-  img.src = browser.runtime.getURL("icon.png");
+  img.src = browser.runtime.getURL("icon-inline.svg");
   img.title = "Blind Reviews";
   img.className = "br-icon";
   return img;

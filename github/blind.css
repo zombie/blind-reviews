@@ -14,10 +14,10 @@ body.br-blinded .br-author {
 li.js-notification.br-blind div.AvatarStack::after,
 body.br-blinded span.br-avatar {
   width: 16px;
-  height: 16px;
-  background: url("../icon.png") 0/contain;
+  height: 9px;
+  background: url("../icon-inline.svg") 0/contain;
   display: inline-block;
-  vertical-align: sub;
+  vertical-align: center;
 }
 body.br-blinded div.timeline-comment-avatar > span.br-avatar {
   width: 42px;
@@ -42,14 +42,14 @@ body.br-blinded #br-toggle div>button::before {
 
 #br-toggle > span > button {
   float: left;
-  width: 24px;
-  height: 24px;
-  margin: -1px 1px 0 0;
-  background: url(../icon.png) 0/contain;
+  width: 32px;
+  height: 18px;
+  margin: 2px 2px 0 0;
+  background: url(../icon-inline.svg) 0/contain;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   body.br-blinded span.br-avatar, #br-toggle > span > button {
-    background: url(chrome-extension://__MSG_@@extension_id__/icon.png) 0/contain;
+    background: url(chrome-extension://__MSG_@@extension_id__/icon-inline.svg) 0/contain;
   }
 }

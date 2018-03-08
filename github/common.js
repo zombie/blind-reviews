@@ -71,7 +71,7 @@ observer.on("li.js-issue-row svg.octicon-git-pull-request", listing);
 function submitReview() {
   const flag = document.getElementById("br-flag");
   const text = document.getElementById("pull_request_review_body");
-  if (flag.checked) {
+  if (flag instanceof HTMLInputElement && text instanceof HTMLTextAreaElement && flag.checked) {
     text.value += `\n\n[![blind-review](https://github.com/blindreviews3.png)]` +
       `(https://github.com/zombie/blind-reviews "Review performed in blind mode")`;
   }
@@ -86,7 +86,8 @@ async function addFlag(textarea) {
     </label>
   `);
   if (!await storage()) {
-    document.getElementById("br-flag").checked = true;
+    // @ts-ignore
+    document.getElementById("br-flag").checked = true; 
   }
   button.addEventListener("click", submitReview);
 }
@@ -129,11 +130,13 @@ observer.on("div.timeline-comment-header a.author", augment);
 observer.on("div.discussion-item a.author", augment);
 observer.on("div.avatar-parent-child > a", augment);
 observer.on("div.commit-avatar > a", augment);
+observer.on("div.commit .AvatarStack a.avatar", augment);
 
 observer.on("h3.discussion-item-header > img.avatar", augment);
 
 observer.on("div.participation-avatars > a.participant-avatar", augment);
-observer.on("div.commit-meta > a.commit-author", augment);
+observer.on("div.commit-meta a.commit-author", augment);
+observer.on("div.commit-meta .AvatarStack a.avatar", augment);
 
 observer.on("div.flash > div > a.text-emphasized", augment);
 observer.on("div.gh-header-meta span.head-ref > span.user", augment);
@@ -144,7 +147,7 @@ async function toggle(e) {
     await storage(null, visible);
 
     const flag = document.getElementById("br-flag");
-    if (flag && flag.checked) {
+    if (flag instanceof HTMLInputElement && flag.checked) {
       flag.checked = false;
     }
 

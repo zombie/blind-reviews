@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "ES6"
+  },
+  "typeAcquisition": {
+    "include": [
+      "chrome"
+    ]
+  }
+}

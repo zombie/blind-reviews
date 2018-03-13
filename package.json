@@ -7,14 +7,11 @@
   "license": "MIT",
 
   "scripts": {
-    "test": "wdio test/wdio-conf.js"
+    "test": "mocha --ui exports --timeout 9000"
   },
-
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chromedriver": "^2.34.0",
-    "wdio-chromedriver-service": "^0.1.1",
-    "wdio-mocha-framework": "^0.2.12",
-    "webdriverio": "^4.0.7"
+    "chai": "^4.0.0",
+    "mocha": "^5.0.0",
+    "puppeteer": "^1.0.0"
   }
 }

@@ -1,15 +1,11 @@
 language: node_js
+node_js: 8
 
-node_js:
-  - "node"
-
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
+before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 
 notifications:
   irc:
-    channels: 
-      - "irc.mozilla.org#blindreviews"
     on_success: change
+    channels: irc.mozilla.org#blindreviews

@@ -14,10 +14,10 @@ body.br-blinded .br-author {
 li.js-notification.br-blind div.AvatarStack::after,
 body.br-blinded span.br-avatar {
   width: 16px;
-  height: 9px;
+  height: 16px;
   background: url("../icon-inline.svg") 0/contain;
   display: inline-block;
-  vertical-align: center;
+  vertical-align: sub;
 }
 body.br-blinded div.timeline-comment-avatar > span.br-avatar {
   width: 42px;
@@ -27,6 +27,9 @@ body.br-blinded div.participation-avatars span.br-avatar {
   width: 24px;
   height: 24px;
   margin: 4px;
+}
+body.br-blinded div.commit span.br-avatar {
+  margin: 3px 0;
 }
 
 #br-toggle {
@@ -42,9 +45,9 @@ body.br-blinded #br-toggle div>button::before {
 
 #br-toggle > span > button {
   float: left;
-  width: 32px;
-  height: 18px;
-  margin: 2px 2px 0 0;
+  width: 24px;
+  height: 24px;
+  margin: -1px 6px 0 0;
   background: url(../icon-inline.svg) 0/contain;
 }
 

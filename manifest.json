@@ -14,14 +14,13 @@
   },
 
   "icons": {
-    "48": "icon-square.svg",
-    "96": "icon-square.svg"
+    "128": "icon.png"
   },
 
   "permissions": ["storage"],
 
   "web_accessible_resources": [
-    "icon-inline.png"
+    "icon-inline.svg"
   ],
 
   "content_scripts": [

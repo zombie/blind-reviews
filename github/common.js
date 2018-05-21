@@ -132,7 +132,9 @@ observer.on("div.avatar-parent-child > a", augment);
 observer.on("div.commit-avatar > a", augment);
 observer.on("div.commit .AvatarStack a.avatar", augment);
 
-observer.on("h3.discussion-item-header > img.avatar", augment);
+observer.on("h3.discussion-item-header img.avatar", augment);
+observer.on("div.review-comment a.author", augment);
+observer.on("div.review-comment img.avatar", augment);
 
 observer.on("div.participation-avatars > a.participant-avatar", augment);
 observer.on("div.commit-meta a.commit-author", augment);

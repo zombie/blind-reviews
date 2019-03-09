@@ -1,16 +1,16 @@
-Blind Reviews
+Blind Code Reviews
 =============
-Blind Reviews Experiment, a browser extension to redact authors of review
-requests on Bugzilla and Github
+Blind Code Reviews, a browser extension to redact authors of review
+requests on Github
 
 
 Background
 ----------
-See [Web Extension for Debiasing Code Reviews in Splinter Experiment][1366429].
+See [Mozilla experiment aims to reduce bias in code reviews][blog].
 
 Using the latest release
 ------------------------
-Visit the [Blind Reviews][amo] page on addons.mozilla.org to add the current
+Visit the [extension page on addons.mozilla.org][amo] to add the current
 version to Firefox.
 
 Using a development version
@@ -42,10 +42,10 @@ Related projects
  * [Gitmask](http://www.gitmask.com/) is a service that will strip out and replace embedded identification info from commits that you submit, including author names, email and timestamps. ([source repository](https://github.com/AnalogJ/gitmask))
 
 
-[1366429]:
-  https://bugzilla.mozilla.org/show_bug.cgi?id=1366429
+[blog]:
+  https://blog.mozilla.org/blog/2018/03/08/gender-bias-code-reviews/
 [amo]:
-  https://addons.mozilla.org/firefox/addon/blind-reviews/
+  https://addons.mozilla.org/firefox/addon/blind-code-reviews/
 [status]:
   https://travis-ci.org/zombie/blind-reviews.svg
 [travis]:
